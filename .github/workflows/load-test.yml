@@ -11,6 +11,6 @@ jobs:
         uses: k6io/action@v0.2.0
         with:
           filename: test.js
-          flags: --vus 50 --duration 10s
+          flags: --vus 500 --duration 10s
           cloud: true
           token: ${{ secrets.K6_CLOUD_API_TOKEN }}
