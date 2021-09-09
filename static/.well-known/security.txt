@@ -1,0 +1,25 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Canonical: https://caspar-health.com/.well-known/security.txt
+Contact: security@caspar-health.com
+Encryption: https://caspar-health.com/publickey.txt
+Policy: https://caspar-health.com/rdp/
+Hiring: https://caspar-health.com/career/
+-----BEGIN PGP SIGNATURE-----
+
+iQJPBAEBCgA5FiEEIQa26+gfrM9gSJ2xAKPoS61o/PAFAl7P9U4bHHNlY3VyaXR5
+QGNhc3Bhci1oZWFsdGguY29tAAoJEACj6EutaPzwaUEQAIf4enwkHI/G2q9gXll9
+QF+U4l2hU7co6jWC4sJ3CW/KRITumzQYGIa0VN4mr7bi+va0AMAiw8QJsMTJa81p
+onKQoCc1+IqwrZj3TAu7qWqs7ia8t8YNRWU8F1nnOG2Pcnis0gGj6/UTolEmTia6
+INRm6xF37LWUoaqiT4nbM3oEpz9DRkhI9WbKXEtvUYtxYqb+V6bilhhx+x2SYPhp
+/vN7gV6JWfVejZUTl28ds2jk07TwWwm2qkGMyjf7X1Mm+46OE4R3zecZcS4ZvuOP
+nJBf/TOMmdK4apMEg1leoZd5d6cgcK6/z6MOf5jj6OtgRphCYxVwtbpHA51wgeka
+hkG9p1fGLlY9/MFxvU8pn3dfNoxpgY4f1occO7KLGISMTbQQLgrc+IGx5Tnq3QR3
+xh02D93FCvtDyuc6qe5mS+b7fDkzl+S8jpahJlD1LNicH0/2S1JbKUVoW5eIvpIu
+c4uaqq1/xcYVEg64eYc14LE0vNWGEQd3weSSzTqMx30RLqaKQMnLp6v22FodBbQq
+5w3qlSha5Y0nJ9ZPgkxKHTVkyhRcUSwuAAdNele4dNK5/cTVasIef0+5H9hoZPiw
+mPkWijno02QlG+gwT0/aqD0LQ0b6HBdPazkfKS8mDUP6POq0HZepZmwHObwHHjJq
+ENHUBwJ27QkyYJtCZgr4EuFi
+=v3nO
+-----END PGP SIGNATURE-----

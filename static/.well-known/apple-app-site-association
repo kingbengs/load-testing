@@ -1,0 +1,23 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "34P9JB89U9.com.caspar-health.iOSpatientApp.labs",
+        "paths": ["/messages/*"]
+      },
+      {
+        "appID": "34P9JB89U9.com.caspar-health.iOSpatientApp.zar",
+        "paths": ["/messages/*"]
+      },
+      {
+        "appID": "34P9JB89U9.com.caspar-health.iOSpatientApp.kbs",
+        "paths": ["/messages/*"]
+      },
+      {
+        "appID": "34P9JB89U9.com.caspar-health.iOSpatientApp",
+        "paths": ["/messages/*"]
+      }
+    ]
+  }
+}

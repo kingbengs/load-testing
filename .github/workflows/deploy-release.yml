@@ -1,0 +1,98 @@
+# name: Deploy
+# on:
+#   release:
+#     types: [released]
+
+# jobs:
+#   prod:
+#     if: contains(github.event.release.tag_name, '-rc.') == false
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Setup environment variables
+#         run: |
+#           echo "DOMAIN_NAME=caspar-health.com" >> $GITHUB_ENV
+#           echo "SERVICE_NAME=website" >> $GITHUB_ENV
+#           echo "SECRETS_PREFIX=PROD" >> $GITHUB_ENV
+
+#       - name: Checkout code repository
+#         uses: actions/checkout@v2
+
+#       - name: Checkout private actions
+#         uses: actions/checkout@v2
+#         with:
+#           repository: casparhealth/caspar-github-actions
+#           token: ${{ secrets.GIT_HUB_TOKEN }}
+#           path: .github/actions
+
+#       - name: Install Helm 3
+#         run: |
+#           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
+#           chmod 700 get_helm.sh
+#           ./get_helm.sh --version v3.2.1
+#           helm version
+
+#       - name: Install gruntwork tools
+#         env:
+#           GITHUB_OAUTH_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
+#           GRUNTWORK_INSTALLER_VERSION: 'v0.0.28'
+#           KUBERGRUNT_VERSION: 'v0.5.13'
+#         run: |
+#           curl -Ls https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version "$GRUNTWORK_INSTALLER_VERSION"
+#           gruntwork-install --binary-name "kubergrunt" --repo "https://github.com/gruntwork-io/kubergrunt" --tag "$KUBERGRUNT_VERSION"
+
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:
+#           aws-access-key-id: ${{ secrets.MACHINE_USER_AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.MACHINE_USER_AWS_SECRET_ACCESS_KEY }}
+#           aws-region: eu-central-1
+#           role-to-assume: ${{ secrets[format('{0}_ASSUME_ROLE_ARN', env.SECRETS_PREFIX)] }}
+#           role-duration-seconds: 1800
+#           role-session-name: GitHubActionWebsite
+
+#       - name: Login to Amazon ECR
+#         id: login-ecr
+#         uses: aws-actions/amazon-ecr-login@v1
+
+#       - name: Build, tag, and push image to Amazon ECR
+#         id: build-image
+#         env:
+#           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#           ECR_REPOSITORY: 'caspar-${{ env.SERVICE_NAME }}'
+#           IMAGE_TAG: ${{ github.event.release.tag_name }}
+#         run: |
+#           docker build --build-arg ENVIRONMENT='prod' -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --file ./Dockerfile .
+#           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+#           echo "::set-output name=repository::$ECR_REGISTRY/$ECR_REPOSITORY"
+#           echo "::set-output name=tag::$IMAGE_TAG"
+
+#       - name: Substitute chart values environment variables
+#         id: find-replace-chart-values
+#         uses: ./.github/actions/find-and-replace
+#         with:
+#           input-file: ops/charts/values-eks.yaml
+#           delimiter: "@@"
+#         env:
+#           IMAGE_REPOSITORY: ${{ steps.build-image.outputs.repository }}
+#           IMAGE_TAG: ${{ steps.build-image.outputs.tag }}
+#           HOSTS: '["${{ env.DOMAIN_NAME }}", "www.${{ env.DOMAIN_NAME }}"]'
+#           SSL_CERT_ARN: ${{ secrets[format('{0}_SSL_ARN', env.SECRETS_PREFIX)] }}
+#           REPLICA_COUNT: 1
+#           CLOUDFRONT_DISTRIBUTION: ${{ secrets[format('{0}_CLOUDFRONT_FRONTENDS', env.SECRETS_PREFIX)] }}
+
+#       - name: Login to EKS cluster
+#         env:
+#           EKS_CLUSTER: ${{ secrets[format('{0}_EKS_ARN', env.SECRETS_PREFIX)] }}
+#         run: |
+#           kubergrunt eks configure --eks-cluster-arn ${EKS_CLUSTER}
+
+#       - name: Deploy the application
+#         env:
+#           CHART_CONFIG: ${{ steps.find-replace-chart-values.outputs.updated-file }}
+#           CHART_NAME: '${{ env.SERVICE_NAME }}'
+#           CHART_NAMESPACE: '${{ env.SERVICE_NAME }}'
+#           CHART_PATH: gruntwork/k8s-service
+#         run: |
+#           helm repo add gruntwork https://helmcharts.gruntwork.io
+#           helm upgrade ${CHART_NAME} ${CHART_PATH} --install --wait --namespace ${CHART_NAMESPACE} -f ${CHART_CONFIG}

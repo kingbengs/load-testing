@@ -1,0 +1,3 @@
+.github/*   @casparhealth/ops
+ops/*       @casparhealth/ops
+Dockerfile* @casparhealth/ops
