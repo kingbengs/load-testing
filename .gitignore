@@ -15,3 +15,5 @@ yarn-error.log
 
 # Dotenv
 .env
+
+deploy-pr.yml
