@@ -10,7 +10,7 @@ jobs:
       - name: Run local k6 test
         uses: k6io/action@v0.2.0
         with:
-          filename: test.js
+          filename: test/perf/*.js
           flags: --vus 1000 --duration 5m
-     #     cloud: true
-      #    token: ${{ secrets.K6_CLOUD_API_TOKEN }}
+          cloud: true
+          token: ${{ secrets.K6_CLOUD_API_TOKEN }}
